@@ -1,8 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 /**
  * Created by ssuri on 10/19/16.
@@ -10,17 +11,39 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  */
 public class Hardware7908Robot
 {
-    private DcMotor lf, lb, rf, rb;
+    private DcMotorController leftDrive, rightDrive, shooter, lift;
     private ColorSensor cs1, cs2;
+    private TouchSensor shooterSwitch;
 
     public Hardware7908Robot(HardwareMap map)
     {
-        lf = map.dcMotor.get("lf");
-        lb = map.dcMotor.get("lb");
-        rf = map.dcMotor.get("rf");
-        rb = map.dcMotor.get("rb");
+        leftDrive = map.dcMotorController.get("left_drive");
+        rightDrive = map.dcMotorController.get("right_drive");
+        shooter = map.dcMotorController.get("shooter");
+        lift = map.dcMotorController.get("lift");
         cs1 = null;
         cs2 = null;
+        shooterSwitch = map.touchSensor.get("shooter_switch");
+    }
+
+    public boolean shooterSwitch()
+    {
+        return shooterSwitch.isPressed();
+    }
+
+    public void stop()
+    {
+        for(int i = 0; i < 8; i++)
+        {
+            moveMotor(i, 0);
+        }
+    }
+
+
+    public void moveMotor(int index, double pow)
+    {
+        DcMotorController controller = index < 2 ? leftDrive : (index < 4 ? rightDrive : (index < 6 ? shooter : lift));
+        controller.setMotorPower(1 + (index % 2), pow);
     }
 
     public void drive(double pow)
@@ -30,26 +53,26 @@ public class Hardware7908Robot
 
     public void drive(double left, double right)
     {
-        lf.setPower(left);
-        lb.setPower(left);
-        rf.setPower(right);
-        rb.setPower(right);
+        leftDrive.setMotorPower(1, left);
+        leftDrive.setMotorPower(2, left);
+        rightDrive.setMotorPower(1, right);
+        rightDrive.setMotorPower(2, right);
     }
 
     public void swingTurn(double pow, boolean left)
     {
-        lf.setPower(pow * (left ? 1 : -1));
-        lb.setPower(pow * (left ? 1 : -1));
-        rf.setPower(pow * (left ? -1 : 1));
-        rb.setPower(pow * (left ? -1 : 1));
+        leftDrive.setMotorPower(1, pow * (left ? 1 : -1));
+        leftDrive.setMotorPower(2, pow * (left ? 1 : -1));
+        rightDrive.setMotorPower(1, pow * (left ? -1 : 1));
+        rightDrive.setMotorPower(2, pow * (left ? -1 : 1));
     }
 
     public void pointTurn(double pow, boolean left)
     {
-        lf.setPower(pow * (left ? 1 : 0));
-        lb.setPower(pow * (left ? 1 : 0));
-        rf.setPower(pow * (left ? 0 : 1));
-        rb.setPower(pow * (left ? 0 : 1));
+        leftDrive.setMotorPower(1, pow * (left ? 1 : 0));
+        leftDrive.setMotorPower(2, pow * (left ? 1 : 0));
+        rightDrive.setMotorPower(1, pow * (left ? 0 : 1));
+        rightDrive.setMotorPower(2, pow * (left ? 0 : 1));
     }
 
     public void lineFollow(LineFollowData data)

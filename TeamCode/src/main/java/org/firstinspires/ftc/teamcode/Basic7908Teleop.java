@@ -25,16 +25,64 @@ public class Basic7908Teleop extends OpMode
     {
     }
 
+    double driveSpeed = 1;
     @Override
     public void loop()
     {
-        telemetry.addData("-gamepad1.left_stick_y", -gamepad1.left_stick_y);
-        telemetry.addData("-gamepad1.right_stick_y", -gamepad1.right_stick_y);
-        robot.drive(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
+        robot.drive(-driveSpeed * gamepad1.left_stick_y, driveSpeed * gamepad1.right_stick_y);
+
+        if(gamepad1.a)
+        {
+            driveSpeed = 1;
+        }
+        else if (gamepad1.b)
+        {
+            driveSpeed = .7;
+        }
+        else if(gamepad1.x)
+        {
+            driveSpeed = .4;
+        }
+
+        if(gamepad1.left_bumper)
+        {
+            robot.moveMotor(4, 1);
+        }
+        else if(gamepad1.right_bumper)
+        {
+            robot.moveMotor(4, -1);
+        }
+        else
+        {
+            robot.moveMotor(4, 0);
+        }
+
+        if(gamepad1.right_trigger > .7 || !robot.shooterSwitch())
+        {
+            robot.moveMotor(5, 1);
+        }
+        else
+        {
+            robot.moveMotor(5, 0);
+        }
+
+        if(gamepad1.dpad_up)
+        {
+            robot.moveMotor(6, 1);
+        }
+        else if(gamepad1.dpad_down)
+        {
+            robot.moveMotor(6, -1);
+        }
+        else
+        {
+            robot.moveMotor(6, 0);
+        }
     }
 
     @Override
     public void stop()
     {
+        robot.stop();
     }
 }

@@ -1,41 +1,37 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-//@Disabled
+import sameer_s.processor.ProcessedOpMode;
+
+@ProcessedOpMode
 @Autonomous(name="Basic7908Autonomous", group="7098")
-public class Basic7908Autonomous extends OpMode
+public class Basic7908Autonomous extends LinearOpMode
 {
     private Hardware7908Robot robot;
 
-    @Override
-    public void init()
+    public void runOpMode() throws InterruptedException
     {
         robot = new Hardware7908Robot(hardwareMap);
+
+        for(int i = 2; i < 3; i++)
+        {
+            robot.moveMotor(i, .5);
+            Thread.sleep(1000);
+            robot.moveMotor(i, 0);
+            Thread.sleep(1000);
+        }
     }
 
     @Override
-    public void init_loop()
-    {
-    }
-
-    @Override
-    public void start()
+    public void init()
     {
     }
 
     @Override
     public void loop()
     {
-        telemetry.addData("-gamepad1.left_stick_y", -gamepad1.left_stick_y);
-        telemetry.addData("-gamepad1.right_stick_y", -gamepad1.right_stick_y);
-        robot.drive(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
-    }
 
-    @Override
-    public void stop()
-    {
     }
 }
