@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 /**
  * Created by ssuri on 10/19/16.
  *
@@ -24,6 +26,11 @@ public class Hardware7908Robot
         cs1 = null;
         cs2 = null;
         shooterSwitch = map.touchSensor.get("shooter_switch");
+    }
+
+    public void logRobot(Telemetry telemetry)
+    {
+        telemetry.addData("Test Log", "Test Log");
     }
 
     public boolean shooterSwitch()

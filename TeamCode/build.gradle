@@ -20,13 +20,11 @@ buildscript {
     }
 }
 
-
 // Required because retrolambda is on maven central
 repositories {
     mavenCentral()
 }
 apply plugin: 'com.android.application' //or apply plugin: 'java'
-apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'me.tatarka.retrolambda'
 
 // Include common definitions from above.
@@ -37,9 +35,16 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    defaultConfig {
+        javaCompileOptions {
+            annotationProcessorOptions {
+                className 'sameer_s.processor.OpModeProcessor'
+            }
+        }
+    }
 }
 
 dependencies {
-    apt project(':compiler')
     compile project(':compiler')
 }

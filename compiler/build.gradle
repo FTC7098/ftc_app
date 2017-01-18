@@ -5,8 +5,9 @@ repositories {
 }
 
 dependencies {
-    compile 'com.google.auto.service:auto-service:1.0-rc1'
+    compile 'com.google.auto.service:auto-service:1.0-rc2'
     compile 'org.jboss.forge.roaster:roaster-api:2.19.4.Final'
     compile 'org.jboss.forge.roaster:roaster-distribution:2.19.4.Final'
     compile 'org.jboss.forge.roaster:roaster-jdt:2.19.4.Final'
+    compile files('libs/streamsupport-1.5.3.jar')
 }

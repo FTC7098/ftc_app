@@ -1,37 +1,46 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import sameer_s.processor.LogRobot;
+import sameer_s.processor.OpModeType;
+import sameer_s.processor.OpModeStage;
 import sameer_s.processor.ProcessedOpMode;
 
-@ProcessedOpMode
-@Autonomous(name="Basic7908Autonomous", group="7098")
-public class Basic7908Autonomous extends LinearOpMode
+import static sameer_s.processor.OpModeStage.*;
+
+@ProcessedOpMode(type = OpModeType.AUTONOMOUS, name = "Basic7908Autonomous", group = "7098")
+public class Basic7908Autonomous extends OpMode
 {
-    private Hardware7908Robot robot;
+	@LogRobot
+	private Hardware7908Robot robot;
 
-    public void runOpMode() throws InterruptedException
+	// Program starts here. Variable names are irrelevant, only order matters.
+	//@formatter:off
+    OpModeStage
+    a = OpModeStage.sleep(1000),
+    b = linear(() ->
     {
-        robot = new Hardware7908Robot(hardwareMap);
-
-        for(int i = 2; i < 3; i++)
+        for(int i = 0; i < 6; i++)
         {
             robot.moveMotor(i, .5);
             Thread.sleep(1000);
             robot.moveMotor(i, 0);
             Thread.sleep(1000);
         }
-    }
+    });
+    //@formatter:on
 
-    @Override
-    public void init()
-    {
-    }
 
-    @Override
-    public void loop()
-    {
+	@Override
+	public void init()
+	{
+		robot = new Hardware7908Robot(hardwareMap);
+	}
 
-    }
+	@Override
+	public void loop()
+	{
+
+	}
 }

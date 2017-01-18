@@ -2,16 +2,19 @@ package sameer_s.processor;
 
 import com.google.auto.service.AutoService;
 
-
 import org.jboss.forge.roaster.ParserException;
 import org.jboss.forge.roaster.Roaster;
-import org.jboss.forge.roaster.model.Parameter;
+import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
+import org.jboss.forge.roaster.model.source.MethodSource;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -24,39 +27,44 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.tools.JavaFileObject;
 
-import static java.util.Collections.singleton;
-import static javax.lang.model.SourceVersion.latestSupported;
-
 /**
  * Created by ssuri on 1/13/17.
+ *
  */
 
 @AutoService(Processor.class)
 public class OpModeProcessor extends AbstractProcessor
 {
     @Override
-    public Set getSupportedAnnotationTypes()
+    public Set<String> getSupportedAnnotationTypes()
     {
-        return singleton(ProcessedOpMode.class.getCanonicalName());
+        return Collections.singleton(ProcessedOpMode.class.getCanonicalName());
     }
 
     @Override
     public SourceVersion getSupportedSourceVersion()
     {
-        return latestSupported();
+        return SourceVersion.latestSupported();
     }
 
     @Override
-    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv)
+    public boolean process(Set<? extends TypeElement> annotations,
+                           RoundEnvironment roundEnv)
     {
         String sourceCode = null;
         String className = null;
-        for (Element element : roundEnv.getElementsAnnotatedWith(ProcessedOpMode.class))
+        for (Element element : roundEnv
+                .getElementsAnnotatedWith(ProcessedOpMode.class))
         {
+            ProcessedOpMode annotation = element
+                    .getAnnotation(ProcessedOpMode.class);
+
             if (element.getKind() == ElementKind.CLASS)
             {
-                String classFolder = ((TypeElement) element).getQualifiedName().toString();
-                File f = new File("TeamCode/src/main/java/" + classFolder.replace(".", "/") + ".java");
+                String classFolder = ((TypeElement) element).getQualifiedName()
+                        .toString();
+                File f = new File("TeamCode/src/main/java/"
+                        + classFolder.replace(".", "/") + ".java");
                 String s = "";
                 try (Scanner sc = new Scanner(f))
                 {
@@ -67,10 +75,10 @@ public class OpModeProcessor extends AbstractProcessor
                     sc.close();
                 } catch (FileNotFoundException e)
                 {
+                    return true;
                 }
 
                 className = element.getSimpleName() + "Processed";
-
 
                 JavaClassSource javaClass = null;
 
@@ -79,40 +87,83 @@ public class OpModeProcessor extends AbstractProcessor
                     javaClass = Roaster.parse(JavaClassSource.class, s);
                 } catch (ParserException e)
                 {
-
+                    // do nothing, this is a bug
                 } finally
                 {
                     if (javaClass != null)
                     {
                         javaClass.setName(className);
-                        javaClass.addMethod()
-                                .setPublic()
-                                .setStatic(true)
-                                .setName("main")
-                                .setReturnTypeVoid()
-                                .setBody("System.out.println(\"Hello World\");")
-                                .addParameter("java.lang.String[]", "args");
-                        javaClass.removeAnnotation(javaClass.getAnnotation(ProcessedOpMode.class));
+
+                        javaClass.addAnnotation(annotation.type().path)
+                                .setStringValue("name", annotation.name())
+                                .setStringValue("group", annotation.group());
+
+						/* Handle @LogRobot */
+                        {
+                            MethodSource<JavaClassSource> loop = getOrMake(
+                                    javaClass, "loop");
+
+                            for (FieldSource<JavaClassSource> field : javaClass
+                                    .getFields())
+                            {
+                                String body = loop.getBody();
+                                if (field.hasAnnotation(LogRobot.class))
+                                {
+                                    body += field.getName()
+                                            + ".logRobot(telemetry);";
+                                }
+
+                                loop.setBody(body);
+                            }
+                        }
+                        /* Handle @OpModeStage */
+                        {
+                            List<FieldSource<JavaClassSource>> fields = new LinkedList<>();
+                            for (FieldSource<JavaClassSource> field : javaClass.getFields())
+                            {
+                                if (field.getType().isType(OpModeStage.class))
+                                {
+                                    fields.add(field);
+                                }
+                            }
+
+                            String fieldName = "a";
+                            while (javaClass.hasField(fieldName))
+                            {
+                                fieldName += "a";
+                            }
+
+                            FieldSource<JavaClassSource> counter = javaClass.addField().setName(fieldName).setType(int.class).setPrivate().setLiteralInitializer("0");
+                            MethodSource<JavaClassSource> loop = getOrMake(javaClass, "loop");
+
+                            for (int i = 0; i < fields.size(); i++)
+                            {
+                                loop.setBody(loop.getBody() + "if(" + counter.getName() + "==" + i + "&&sameer_s.processor.OpModeStage.execute(" + fields.get(i).getName() + ")){" + counter.getName() + "++;}");
+                            }
+                        }
+
+                        javaClass.removeAnnotation(javaClass
+                                .getAnnotation(ProcessedOpMode.class));
 
                         sourceCode = javaClass.toString();
                         System.out.println("Set src code");
                     } else
                     {
-                        sourceCode = "// An error occurred";
+                        sourceCode = "An error occurred";
                     }
                 }
-
 
                 break;
             }
         }
 
-
         if (className != null)
+
         {
             try
-            { // write the file
-                JavaFileObject source = processingEnv.getFiler().createSourceFile("sameer_s.generated." + className);
+            {
+                JavaFileObject source = processingEnv.getFiler()
+                        .createSourceFile("sameer_s.generated." + className);
 
                 Writer writer = source.openWriter();
                 writer.write(sourceCode);
@@ -120,12 +171,23 @@ public class OpModeProcessor extends AbstractProcessor
                 writer.close();
             } catch (IOException e)
             {
-                // Note: calling e.printStackTrace() will print IO errors
-                // that occur from the file already existing after its first run, this is normal
+                // Do not call e.printStackTrace()
             }
         }
 
         return true;
     }
 
+    private MethodSource<JavaClassSource> getOrMake(JavaClassSource javaClass,
+                                                    String name)
+    {
+        if (javaClass.hasMethodSignature(name))
+        {
+            return javaClass.getMethod(name);
+        } else
+        {
+            return javaClass.addMethod().setPublic().setReturnTypeVoid()
+                    .setName(name);
+        }
+    }
 }
