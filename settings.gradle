@@ -1,2 +1,2 @@
-include ':FtcRobotController', ':compiler'
+include ':FtcRobotController', ':compiler', ':annotations'
 include ':TeamCode'

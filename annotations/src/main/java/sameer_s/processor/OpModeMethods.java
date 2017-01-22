@@ -1,25 +1,23 @@
 package sameer_s.processor;
 
-@FunctionalInterface
-public interface OpModeStage
+public class OpModeMethods
 {
-    boolean doAction() throws Throwable;
-
-    static OpModeStage forTime(long millis, LinearOpModeStage action)
+    public static OpModeStage forTime(final long millis, final OpModeStage.LinearOpModeStage action)
     {
         return new OpModeStage()
         {
             long startTime = -1;
+
             @Override
             public boolean doAction() throws Throwable
             {
-                if(startTime == -1)
+                if (startTime == -1)
                 {
                     startTime = System.currentTimeMillis();
                 }
 
                 long elapsed = System.currentTimeMillis() - startTime;
-                if(elapsed < millis)
+                if (elapsed < millis)
                 {
                     action.doAction();
                     return false;
@@ -30,14 +28,21 @@ public interface OpModeStage
         };
     }
 
-    static OpModeStage sleep(long millis)
+    public static OpModeStage sleep(long millis)
     {
-        return forTime(millis, () -> {});
+        return forTime(millis, new OpModeStage.LinearOpModeStage()
+        {
+            @Override
+            public void doAction() throws Throwable
+            {
+
+            }
+        });
     }
 
-    static OpModeStage linear(LinearOpModeStage action)
+    public static OpModeStage linear(final OpModeStage.LinearOpModeStage action)
     {
-        Thread t = new Thread()
+        final Thread t = new Thread()
         {
             @Override
             public void run()
@@ -45,31 +50,31 @@ public interface OpModeStage
                 try
                 {
                     action.doAction();
-                }
-                catch (Throwable t)
+                } catch (Throwable t)
                 {
                     throw new RuntimeException(t);
                 }
             }
         };
         t.start();
-        return () -> !t.isAlive();
+        return new OpModeStage()
+        {
+            @Override
+            public boolean doAction() throws Throwable
+            {
+                return !t.isAlive();
+            }
+        };
     }
 
-    static boolean execute(OpModeStage action)
+    public static boolean execute(OpModeStage action)
     {
         try
         {
             return action.doAction();
-        }
-        catch (Throwable t)
+        } catch (Throwable t)
         {
             throw new RuntimeException(t);
         }
-    }
-
-    interface LinearOpModeStage
-    {
-        void doAction() throws Throwable;
     }
 }

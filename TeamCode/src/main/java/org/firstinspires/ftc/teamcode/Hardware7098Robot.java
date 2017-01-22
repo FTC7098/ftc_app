@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -11,16 +12,18 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  * Created by ssuri on 10/19/16.
  *
  */
-public class Hardware7908Robot
+public class Hardware7098Robot
 {
     private DcMotorController leftDrive, rightDrive, shooter, lift;
+    private ServoController servo;
     private ColorSensor cs1, cs2;
     private TouchSensor shooterSwitch;
 
-    public Hardware7908Robot(HardwareMap map)
+    public Hardware7098Robot(HardwareMap map)
     {
         leftDrive = map.dcMotorController.get("left_drive");
         rightDrive = map.dcMotorController.get("right_drive");
+        servo = map.servoController.get("servo");
         shooter = map.dcMotorController.get("shooter");
         lift = map.dcMotorController.get("lift");
         cs1 = null;
@@ -51,6 +54,16 @@ public class Hardware7908Robot
     {
         DcMotorController controller = index < 2 ? leftDrive : (index < 4 ? rightDrive : (index < 6 ? shooter : lift));
         controller.setMotorPower(1 + (index % 2), pow);
+    }
+
+    public void setServo(int index, double pos)
+    {
+        servo.setServoPosition(index + 1, Math.max(0, Math.min(1, pos)));
+    }
+
+    public double getServo(int index)
+    {
+        return servo.getServoPosition(index + 1);
     }
 
     public void drive(double pow)

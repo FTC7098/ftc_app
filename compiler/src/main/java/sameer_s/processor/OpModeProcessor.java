@@ -4,6 +4,8 @@ import com.google.auto.service.AutoService;
 
 import org.jboss.forge.roaster.ParserException;
 import org.jboss.forge.roaster.Roaster;
+import org.jboss.forge.roaster._shade.org.eclipse.jdt.core.dom.NullLiteral;
+import org.jboss.forge.roaster.model.JavaClass;
 import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
@@ -15,6 +17,7 @@ import java.io.Writer;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -29,7 +32,6 @@ import javax.tools.JavaFileObject;
 
 /**
  * Created by ssuri on 1/13/17.
- *
  */
 
 @AutoService(Processor.class)
@@ -116,29 +118,43 @@ public class OpModeProcessor extends AbstractProcessor
                                 loop.setBody(body);
                             }
                         }
-                        /* Handle @OpModeStage */
+                        /* Handle OpModeStage[] */
                         {
-                            List<FieldSource<JavaClassSource>> fields = new LinkedList<>();
+                            FieldSource<JavaClassSource> array = null;
                             for (FieldSource<JavaClassSource> field : javaClass.getFields())
                             {
-                                if (field.getType().isType(OpModeStage.class))
+                                if (field.getType().isArray() && field.getType().isType(OpModeStage.class))
                                 {
-                                    fields.add(field);
+                                    array = field;
+                                    break;
                                 }
                             }
 
-                            String fieldName = "a";
-                            while (javaClass.hasField(fieldName))
+                            if (array != null)
                             {
-                                fieldName += "a";
-                            }
+                                String fieldName = "a";
+                                while (javaClass.hasField(fieldName))
+                                {
+                                    fieldName += "a";
+                                }
 
-                            FieldSource<JavaClassSource> counter = javaClass.addField().setName(fieldName).setType(int.class).setPrivate().setLiteralInitializer("0");
-                            MethodSource<JavaClassSource> loop = getOrMake(javaClass, "loop");
+                                FieldSource<JavaClassSource> counter = javaClass.addField().setName(fieldName).setType(int.class).setPrivate().setLiteralInitializer("0");
+                                MethodSource<JavaClassSource> loop = getOrMake(javaClass, "loop");
 
-                            for (int i = 0; i < fields.size(); i++)
-                            {
-                                loop.setBody(loop.getBody() + "if(" + counter.getName() + "==" + i + "&&sameer_s.processor.OpModeStage.execute(" + fields.get(i).getName() + ")){" + counter.getName() + "++;}");
+                                StringBuilder builder = new StringBuilder(loop.getBody());
+                                builder.append("if(");
+                                builder.append(counter.getName());
+                                builder.append("<");
+                                builder.append(array.getName());
+                                builder.append(".length && sameer_s.processor.OpModeMethods.execute(");
+                                builder.append(array.getName());
+                                builder.append("[");
+                                builder.append(counter.getName());
+                                builder.append("]");
+                                builder.append(")){");
+                                builder.append(counter.getName());
+                                builder.append("++;}");
+                                loop.setBody(builder.toString());
                             }
                         }
 
