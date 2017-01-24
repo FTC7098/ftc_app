@@ -54,20 +54,31 @@ public class Basic7098Teleop extends OpMode
             robot.moveMotor(4, 0);
         }
 
+
         if (gamepad1.right_trigger > .7 || !robot.shooterSwitch())
         {
-            robot.moveMotor(5, 1);
+            robot.moveMotor(5, -1);
         } else
         {
             robot.moveMotor(5, 0);
         }
 
+
+
         if (gamepad2.a)
         {
-            robot.setServo(0, robot.getServo(0) + .005);
+            if (Double.isNaN(robot.getServo(0))) {
+                robot.setServo(0, 0.5);
+            } else {
+                robot.setServo(0, robot.getServo(0) + .005);
+            }
         } else if (gamepad2.b)
         {
-            robot.setServo(0, robot.getServo(0) - .005);
+            if (Double.isNaN(robot.getServo(0))) {
+                robot.setServo(0, 0.5);
+            } else {
+                robot.setServo(0, robot.getServo(0) - .005);
+            }
         }
 
         if (gamepad2.dpad_up)

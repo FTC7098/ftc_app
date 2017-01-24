@@ -51,9 +51,3 @@ dependencies {
     annotationProcessor project(':compiler')
     compile project(':annotations')
 }
-
-retrolambda {
-    jdk System.getenv("JAVA_HOME")
-    oldJdk System.getenv("JAVA7_HOME")
-    javaVersion JavaVersion.VERSION_1_6
-}
