@@ -53,8 +53,6 @@ public class OpModeProcessor extends AbstractProcessor
     public boolean process(Set<? extends TypeElement> annotations,
                            RoundEnvironment roundEnv)
     {
-        if(Math.random() < 2) throw new NullPointerException();
-
         String sourceCode = null;
         String className = null;
         for (Element element : roundEnv

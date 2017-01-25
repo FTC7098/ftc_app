@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.ServoController;
@@ -14,10 +15,10 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  */
 public class Hardware7098Robot
 {
-    private DcMotorController leftDrive, rightDrive, shooter, lift;
-    private ServoController servo;
-    private ColorSensor cs1, cs2;
-    private TouchSensor shooterSwitch;
+    public DcMotorController leftDrive, rightDrive, shooter, lift;
+    public ServoController servo;
+    public ColorSensor cs1, cs2;
+    public TouchSensor shooterSwitch;
 
     public Hardware7098Robot(HardwareMap map)
     {
@@ -31,6 +32,32 @@ public class Hardware7098Robot
         shooterSwitch = map.touchSensor.get("shooter_switch");
     }
 
+    public void init()
+    {
+        setServo(0, 0.75);
+        setServo(1, 0.75);
+    }
+
+    public int getEncoderValue(int index)
+    {
+        DcMotorController controller = index < 2 ? leftDrive : (index < 4 ? rightDrive : (index < 6 ? shooter : lift));
+        return controller.getMotorCurrentPosition(1 + (index % 2));
+    }
+
+    public boolean resetEncoder(int index)
+    {
+        DcMotorController controller = index < 2 ? leftDrive : (index < 4 ? rightDrive : (index < 6 ? shooter : lift));
+        if(controller.getMotorMode(1 + (index % 2)) == DcMotor.RunMode.STOP_AND_RESET_ENCODER)
+        {
+            controller.setMotorMode(1 + (index % 2), DcMotor.RunMode.RUN_USING_ENCODER);
+            return true;
+        }
+        else
+        {
+            controller.setMotorMode(1 + (index % 2), DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            return false;
+        }
+    }
     public void logRobot(Telemetry telemetry)
     {
         telemetry.addData("Test Log", "Test Log");
@@ -79,20 +106,20 @@ public class Hardware7098Robot
         rightDrive.setMotorPower(2, right);
     }
 
-    public void swingTurn(double pow, boolean left)
+    public void swingTurn(double pow, boolean right)
     {
-        leftDrive.setMotorPower(1, pow * (left ? 1 : -1));
-        leftDrive.setMotorPower(2, pow * (left ? 1 : -1));
-        rightDrive.setMotorPower(1, pow * (left ? -1 : 1));
-        rightDrive.setMotorPower(2, pow * (left ? -1 : 1));
+        leftDrive.setMotorPower(1, pow * (right ? 1 : -1));
+        leftDrive.setMotorPower(2, pow * (right ? 1 : -1));
+        rightDrive.setMotorPower(1, pow * (right ? -1 : 1));
+        rightDrive.setMotorPower(2, pow * (right ? -1 : 1));
     }
 
-    public void pointTurn(double pow, boolean left)
+    public void pointTurn(double pow, boolean right)
     {
-        leftDrive.setMotorPower(1, pow * (left ? 1 : 0));
-        leftDrive.setMotorPower(2, pow * (left ? 1 : 0));
-        rightDrive.setMotorPower(1, pow * (left ? 0 : 1));
-        rightDrive.setMotorPower(2, pow * (left ? 0 : 1));
+        leftDrive.setMotorPower(1, pow * (right ? 1 : 0));
+        leftDrive.setMotorPower(2, pow * (right ? 1 : 0));
+        rightDrive.setMotorPower(1, pow * (right ? 0 : 1));
+        rightDrive.setMotorPower(2, pow * (right ? 0 : 1));
     }
 
     public void lineFollow(LineFollowData data)

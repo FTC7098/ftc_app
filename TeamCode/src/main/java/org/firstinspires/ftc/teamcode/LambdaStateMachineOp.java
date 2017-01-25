@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import java.util.List;
 
+import sameer_s.processor.OpModeStage;
+
 /**
  * Created by Sameer on 8/21/2015.
  *

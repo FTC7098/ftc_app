@@ -40,6 +40,19 @@ public class OpModeMethods
         });
     }
 
+    public static OpModeStage exec(final OpModeStage.LinearOpModeStage action)
+    {
+        return new OpModeStage()
+        {
+            @Override
+            public boolean doAction() throws Throwable
+            {
+                action.doAction();
+                return true;
+            }
+        };
+    }
+
     public static OpModeStage linear(final OpModeStage.LinearOpModeStage action)
     {
         final Thread t = new Thread()
