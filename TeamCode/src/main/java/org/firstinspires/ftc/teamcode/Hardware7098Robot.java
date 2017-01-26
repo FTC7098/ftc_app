@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.ServoController;
@@ -20,6 +21,7 @@ public class Hardware7098Robot
     public ServoController servo;
     public LightSensor csLeft, csRight, csSide;
     public TouchSensor shooterSwitch;
+    public GyroSensor gyro;
 
     public Hardware7098Robot(HardwareMap map)
     {
@@ -32,12 +34,15 @@ public class Hardware7098Robot
         csRight = map.lightSensor.get("right");
         csSide = map.lightSensor.get("beacon");
         shooterSwitch = map.touchSensor.get("shooter_switch");
+        gyro = map.gyroSensor.get("gyro");
     }
 
     public void init()
     {
         setServo(0, 0.75);
         setServo(1, 0.5);
+
+        gyro.calibrate();
     }
 
     public int getEncoderValue(int index)
@@ -122,6 +127,10 @@ public class Hardware7098Robot
         leftDrive.setMotorPower(2, pow * (right ? 1 : 0));
         rightDrive.setMotorPower(1, pow * (right ? 0 : 1));
         rightDrive.setMotorPower(2, pow * (right ? 0 : 1));
+    }
+
+    public void gyroTurn() {
+       gyro.getHeading();
     }
 
     public void lineFollow(LineFollowData data)

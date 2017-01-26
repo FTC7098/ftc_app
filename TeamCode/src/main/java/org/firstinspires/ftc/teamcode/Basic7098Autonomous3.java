@@ -26,6 +26,9 @@ public class Basic7098Autonomous3 extends HybridOpMode
     // @formatter:off
 	OpModeStage[] program = new OpModeStage[] {
 
+            /*
+             * Drive forward to get within range of center vortex
+             */
             exec(() -> initialEncoder = abs(robot.getEncoderValue(0))),
             exec(() -> robot.drive(.3f, .3f)),
             () -> {
@@ -40,12 +43,19 @@ public class Basic7098Autonomous3 extends HybridOpMode
 
             exec(this::beep),
 
+            /*
+             * Fire both balls into the vortex
+             */
+
 //            exec(() -> robot.moveMotor(5, 1)),
 //            exec(() -> startTime = System.currentTimeMillis()),
 //            () -> System.currentTimeMillis() - startTime >= 5000,
 //            exec(() -> robot.moveMotor(5, 0)),
 
 
+            /*
+             * Back away from the vortex
+             */
             exec(() -> initialEncoder = abs(robot.getEncoderValue(0))),
             exec(() -> robot.drive(-.3f, -.3f)),
             () -> {
@@ -58,11 +68,17 @@ public class Basic7098Autonomous3 extends HybridOpMode
             exec(() -> startTime = System.currentTimeMillis()),
             () -> System.currentTimeMillis() - startTime >= 250,
 
-            exec(() -> initialEncoder = abs(robot.getEncoderValue(0))),
+            /*
+             * Turn towards the near beacon
+             */
+            exec(() -> robot.gyro.calibrate()),
+            () -> !robot.gyro.isCalibrating(),
+            //exec(() -> initialEncoder = abs(robot.getEncoderValue(0))),
             exec(() -> robot.drive(.3f, 0)),
             () -> {
-                telemetry.addData("01", robot.getEncoderValue(0));
-                return abs(abs(robot.getEncoderValue(0)) - initialEncoder) >= 1725;
+                //telemetry.addData("01", robot.getEncoderValue(0));
+                //return abs(abs(robot.getEncoderValue(0)) - initialEncoder) >= 1725;
+                return robot.gyro.getHeading() < -55;
             },
             exec(() -> robot.drive(0)),
 
@@ -71,6 +87,22 @@ public class Basic7098Autonomous3 extends HybridOpMode
 
             exec(this::beep),
 
+            /*
+             * Drive towards the beacon a fixed distance by encoders
+             */
+            exec(() -> initialEncoder = abs(robot.getEncoderValue(0))),
+            exec(() -> robot.drive(.3f, .3f)),
+            () -> {
+                telemetry.addData("01", robot.getEncoderValue(0));
+                telemetry.addData("02", initialEncoder);
+                return abs(abs(robot.getEncoderValue(0)) - initialEncoder) >= 2000;
+            },
+            // exec(() -> robot.drive(0)),
+
+
+            /*
+             * Drive forward until left light sensor reaches the white line
+             */
             exec(() -> robot.csLeft.enableLed(true)),
             exec(() -> robot.csRight.enableLed(true)),
             exec(() -> initialEncoder = abs(robot.getEncoderValue(0))),
@@ -79,22 +111,42 @@ public class Basic7098Autonomous3 extends HybridOpMode
                 telemetry.addData("03", robot.csLeft.getLightDetected());
                 return robot.csLeft.getLightDetected() > 0.3;
             },
-            exec(() -> robot.drive(0)),
+
+            /*
+             * Drive forward past the line
+             */
+            exec(() -> initialEncoder = abs(robot.getEncoderValue(0))),
+            exec(() -> robot.drive(.1f, .1f)),
+            () -> {
+                telemetry.addData("01", robot.getEncoderValue(0));
+                telemetry.addData("02", initialEncoder);
+                return abs(abs(robot.getEncoderValue(0)) - initialEncoder) >= 200;
+            },
+            // exec(() -> robot.drive(0)),
 
             exec(() -> startTime = System.currentTimeMillis()),
             () -> System.currentTimeMillis() - startTime >= 250,
 
-            exec(() -> initialEncoder = abs(robot.getEncoderValue(2))),
+            /*
+             * Turn left the same amount as was turned right
+             */
+            exec(() -> robot.gyro.calibrate()),
+            () -> !robot.gyro.isCalibrating(),
+            //exec(() -> initialEncoder = abs(robot.getEncoderValue(2))),
             exec(() -> robot.drive(0, .5)),
             () -> {
-                telemetry.addData("01", robot.getEncoderValue(2));
-                return abs(abs(robot.getEncoderValue(2)) - initialEncoder) >= 1725;
+                //telemetry.addData("01", robot.getEncoderValue(2));
+                //return abs(abs(robot.getEncoderValue(2)) - initialEncoder) >= 1725;
+                return robot.gyro.getHeading() > 55;
             },
             exec(() -> robot.drive(0)),
 
             exec(() -> startTime = System.currentTimeMillis()),
             () -> System.currentTimeMillis() - startTime >= 250,
 
+            /*
+             * Drive forward past the line
+             */
             exec(() -> initialEncoder = abs(robot.getEncoderValue(0))),
             exec(() -> robot.drive(.3f, .3f)),
             () -> {
@@ -105,6 +157,9 @@ public class Basic7098Autonomous3 extends HybridOpMode
             exec(() -> robot.drive(0)),
 
 
+            /*
+             * Back up and align both light sensors on the line.
+             */
             exec(() -> startTime = System.currentTimeMillis()),
             () -> System.currentTimeMillis() - startTime >= 250,
 
