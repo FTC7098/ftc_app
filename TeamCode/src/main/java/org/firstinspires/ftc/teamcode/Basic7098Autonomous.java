@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import sameer_s.processor.LogRobot;
@@ -10,6 +11,7 @@ import sameer_s.processor.ProcessedOpMode;
 import static sameer_s.processor.OpModeMethods.*;
 import static java.lang.Math.abs;
 
+@Disabled
 @ProcessedOpMode(type = OpModeType.AUTONOMOUS, name = "Basic7098Autonomous", group = "7098")
 public class Basic7098Autonomous extends OpMode
 {

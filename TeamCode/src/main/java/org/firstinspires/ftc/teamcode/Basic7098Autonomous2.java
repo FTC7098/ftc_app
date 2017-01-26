@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import sameer_s.processor.OpModeStage;
 
 import static java.lang.Math.abs;
 
+@Disabled
 @Autonomous(name = "Basic7098Autonomous2", group = "7098")
 public class Basic7098Autonomous2 extends LambdaStateMachineOp
 {

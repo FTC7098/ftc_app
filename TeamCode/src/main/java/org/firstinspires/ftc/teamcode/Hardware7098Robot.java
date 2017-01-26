@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
@@ -17,7 +18,7 @@ public class Hardware7098Robot
 {
     public DcMotorController leftDrive, rightDrive, shooter, lift;
     public ServoController servo;
-    public ColorSensor cs1, cs2;
+    public LightSensor csLeft, csRight, csSide;
     public TouchSensor shooterSwitch;
 
     public Hardware7098Robot(HardwareMap map)
@@ -27,15 +28,16 @@ public class Hardware7098Robot
         servo = map.servoController.get("servo");
         shooter = map.dcMotorController.get("shooter");
         lift = map.dcMotorController.get("lift");
-        cs1 = null;
-        cs2 = null;
+        csLeft = map.lightSensor.get("left");
+        csRight = map.lightSensor.get("right");
+        csSide = map.lightSensor.get("beacon");
         shooterSwitch = map.touchSensor.get("shooter_switch");
     }
 
     public void init()
     {
         setServo(0, 0.75);
-        setServo(1, 0.75);
+        setServo(1, 0.5);
     }
 
     public int getEncoderValue(int index)
@@ -102,8 +104,8 @@ public class Hardware7098Robot
     {
         leftDrive.setMotorPower(1, left);
         leftDrive.setMotorPower(2, left);
-        rightDrive.setMotorPower(1, right);
-        rightDrive.setMotorPower(2, right);
+        rightDrive.setMotorPower(1, -right);
+        rightDrive.setMotorPower(2, -right);
     }
 
     public void swingTurn(double pow, boolean right)

@@ -35,7 +35,7 @@ public class Basic7098Teleop extends OpMode
 	@Override
 	public void loop()
 	{
-		robot.drive(-driveSpeed * gamepad1.left_stick_y, driveSpeed * gamepad1.right_stick_y);
+		robot.drive(-driveSpeed * gamepad1.left_stick_y, -driveSpeed * gamepad1.right_stick_y);
 
 		if (gamepad1.a)
 		{
@@ -75,9 +75,8 @@ public class Basic7098Teleop extends OpMode
 		}
 		else if(!robot.shooterSwitch())
 		{
-			robot.moveMotor(5, rt ? 1 : -1);
+			//robot.moveMotor(5, rt ? 1 : -1);
 		}
-
 		else
 		{
 			robot.moveMotor(5, 0);
@@ -97,6 +96,19 @@ public class Basic7098Teleop extends OpMode
 			{
 				robot.setServo(0, robot.getServo(0) - .005);
 			}
+		}
+
+		if (gamepad1.a)
+		{
+			robot.setServo(1, 1.0f);
+		}
+		else if (gamepad1.b)
+		{
+			robot.setServo(1, 0.0f);
+		}
+		else
+		{
+			robot.setServo(1, 0.5f);
 		}
 
 		if (gamepad2.dpad_up)

@@ -30,8 +30,9 @@ public class OpModeMethods
 
     public static OpModeStage sleep(long millis)
     {
-        return forTime(millis, new OpModeStage.LinearOpModeStage()
+        return exec(new OpModeStage.LinearOpModeStage()
         {
+            long startTime = -1;
             @Override
             public void doAction() throws Throwable
             {
