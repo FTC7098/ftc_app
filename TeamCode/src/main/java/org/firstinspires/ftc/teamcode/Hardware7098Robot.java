@@ -39,7 +39,7 @@ public class Hardware7098Robot
 
     public void init()
     {
-        setServo(0, 0.75);
+        setServo(0, 0.8);
         setServo(1, 0.5);
 
         gyro.calibrate();

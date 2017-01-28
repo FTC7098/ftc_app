@@ -4,12 +4,14 @@ import android.media.AudioManager;
 import android.media.ToneGenerator;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import sameer_s.processor.OpModeStage;
 
 import static java.lang.Math.abs;
 import static sameer_s.processor.OpModeMethods.exec;
 
+@Disabled
 @Autonomous(name = "Basic7098Autonomous4", group = "7098")
 public class Basic7098Autonomous4 extends HybridOpMode
 {

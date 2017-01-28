@@ -31,11 +31,16 @@ public class Basic7098Teleop extends OpMode
     }
 
 	private double driveSpeed = 1;
-	private boolean rt = true;
+	private boolean usingTouch = true;
+	private boolean back1Pressed = false;
 	@Override
 	public void loop()
 	{
-		robot.drive(-driveSpeed * gamepad1.left_stick_y, -driveSpeed * gamepad1.right_stick_y);
+		//robot.drive(-driveSpeed * gamepad1.left_stick_y, -driveSpeed * gamepad1.right_stick_y);
+		double leftSpeed, rightSpeed;
+		leftSpeed = -driveSpeed * Math.pow(gamepad1.left_stick_y, 3);
+		rightSpeed = -driveSpeed * Math.pow(gamepad1.right_stick_y, 3);
+        robot.drive(leftSpeed, rightSpeed);
 
 		if (gamepad1.a)
 		{
@@ -63,19 +68,24 @@ public class Basic7098Teleop extends OpMode
 			robot.moveMotor(4, 0);
 		}
 
+		if (gamepad1.back)
+		{
+			back1Pressed = true;
+		}
+		else if (!gamepad1.back)
+		{
+			if (back1Pressed) {
+				back1Pressed = false;
+				usingTouch = !usingTouch;
+			}
+		}
 		if (gamepad1.right_trigger > .7)
 		{
-			rt = true;
 			robot.moveMotor(5, 1);
 		}
-		else if(gamepad1.left_trigger > .7)
+		else if (usingTouch && !robot.shooterSwitch())
 		{
-			rt = false;
-			robot.moveMotor(5, -1);
-		}
-		else if(!robot.shooterSwitch())
-		{
-			//robot.moveMotor(5, rt ? 1 : -1);
+			robot.moveMotor(5, 1);
 		}
 		else
 		{
