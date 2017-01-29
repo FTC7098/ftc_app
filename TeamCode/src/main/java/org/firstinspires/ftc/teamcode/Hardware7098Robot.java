@@ -17,6 +17,13 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  */
 public class Hardware7098Robot
 {
+    // This class is fairly self-documenting and thus line-by-line comments are not provided.
+    // Overall, this class is used to abstract the implementation of moving the robot. Instead of
+    // moving individual motors, we have simplified it with methods like drive(power). Some of the
+    // methods below are not completely finalized and/or implemented. If so, it has been
+    // appropriately marked.
+
+
     public DcMotorController leftDrive, rightDrive, shooter, lift;
     public ServoController servo;
     public LightSensor csLeft, csRight, csSide;
@@ -67,6 +74,7 @@ public class Hardware7098Robot
     }
     public void logRobot(Telemetry telemetry)
     {
+        // not implemented
         telemetry.addData("Test Log", "Test Log");
     }
 
@@ -135,6 +143,7 @@ public class Hardware7098Robot
 
     public void lineFollow(LineFollowData data)
     {
+        // not implemented
     }
 
     public static class LineFollowData

@@ -7,41 +7,46 @@ import sameer_s.processor.LogRobot;
 import sameer_s.processor.OpModeType;
 import sameer_s.processor.ProcessedOpMode;
 
-//@ProcessedOpMode(type= OpModeType.TELEOP, name="Basic7098Teleop", group="7098")
-@TeleOp(name="Basic7098Teleop", group="7098")
+@TeleOp(name = "Basic7098Teleop", group = "7098")
 public class Basic7098Teleop extends OpMode
 {
-    @LogRobot
+	@LogRobot // Part of our annotation processing library. Since it is disabled, it does nothing right now.
 	private Hardware7098Robot robot;
 
 	@Override
 	public void init()
 	{
+		// Initializes the hardware class with the provided hardware map
 		robot = new Hardware7098Robot(hardwareMap);
 	}
 
 	@Override
-	public void init_loop()
-	{}
-
-	@Override
 	public void start()
 	{
-        robot.init();
-    }
+		// Sets the servos to their default position
+		robot.init();
+	}
 
+	// Controls the speed of the robot. There are three modes: (1=100% power, .7 = 70% power, and .4=40% power)
 	private double driveSpeed = 1;
+	// Allows us to enable and disable the touch sensor that automatically loads our spring mechanism
 	private boolean usingTouch = true;
+	// Allows us to use the switch as a toggle. Without this, the program would switch between using touch and not using touch many of times a second.
 	private boolean back1Pressed = false;
+
 	@Override
 	public void loop()
 	{
-		//robot.drive(-driveSpeed * gamepad1.left_stick_y, -driveSpeed * gamepad1.right_stick_y);
+		// robot.drive(-driveSpeed * gamepad1.left_stick_y, -driveSpeed * gamepad1.right_stick_y);
+
+		// Scales the movement of the robot proportional to the cube of the amount the joystick is moved.
+		// This makes it so more precision can be gained when moving at slow speeds.
 		double leftSpeed, rightSpeed;
 		leftSpeed = -driveSpeed * Math.pow(gamepad1.left_stick_y, 3);
 		rightSpeed = -driveSpeed * Math.pow(gamepad1.right_stick_y, 3);
-        robot.drive(leftSpeed, rightSpeed);
+		robot.drive(leftSpeed, rightSpeed);
 
+		// Buttons to set the drive movement speed.
 		if (gamepad1.a)
 		{
 			driveSpeed = 1;
@@ -55,6 +60,7 @@ public class Basic7098Teleop extends OpMode
 			driveSpeed = .4;
 		}
 
+		// Left and right bumpers are used to move the collection in opposite directions.
 		if (gamepad1.left_bumper)
 		{
 			robot.moveMotor(4, 1);
@@ -68,21 +74,27 @@ public class Basic7098Teleop extends OpMode
 			robot.moveMotor(4, 0);
 		}
 
+		// Uses the back button as a toggle to disable and re-enable the touch sensor.
 		if (gamepad1.back)
 		{
 			back1Pressed = true;
 		}
 		else if (!gamepad1.back)
 		{
-			if (back1Pressed) {
+			if (back1Pressed)
+			{
 				back1Pressed = false;
 				usingTouch = !usingTouch;
 			}
 		}
+
+		// Right trigger loads/fires the spring-based launching mechanism.
 		if (gamepad1.right_trigger > .7)
 		{
 			robot.moveMotor(5, 1);
 		}
+		// If the touch sensor is enabled, and it is not being pressed, that will cause it to load
+		// the shooter, but not fire, since fully loading will press the sensor
 		else if (usingTouch && !robot.shooterSwitch())
 		{
 			robot.moveMotor(5, 1);
@@ -92,12 +104,16 @@ public class Basic7098Teleop extends OpMode
 			robot.moveMotor(5, 0);
 		}
 
+		// A and B buttons on the second controller are used to move the servo that holds up
+		// the forklift.
 		if (gamepad2.a)
 		{
-            robot.setServo(0, robot.getServo(0) + .005);
+			robot.setServo(0, robot.getServo(0) + .005);
 		}
 		else if (gamepad2.b)
 		{
+			// Since getting the servo value initially returns NaN, we must set a value
+			// the first time we use it
 			if (Double.isNaN(robot.getServo(0)))
 			{
 				robot.setServo(0, 0.5);
@@ -108,11 +124,12 @@ public class Basic7098Teleop extends OpMode
 			}
 		}
 
-		if (gamepad1.a)
+		// D-PAD horizontal pressed control the button pusher we use to activate the beacons
+		if (gamepad1.dpad_left)
 		{
 			robot.setServo(1, 1.0f);
 		}
-		else if (gamepad1.b)
+		else if (gamepad1.dpad_right)
 		{
 			robot.setServo(1, 0.0f);
 		}
@@ -121,6 +138,8 @@ public class Basic7098Teleop extends OpMode
 			robot.setServo(1, 0.5f);
 		}
 
+		// Driver #2 can use their D-PAD to raise and lift our forklift
+		// (Note that there are two motors, part of our speed-based design)
 		if (gamepad2.dpad_up)
 		{
 			robot.moveMotor(6, 1);
@@ -141,10 +160,7 @@ public class Basic7098Teleop extends OpMode
 	@Override
 	public void stop()
 	{
-//		while (robot.shooterSwitch())
-//		{
-//			robot.moveMotor(5, 1);
-//		}
+		// Stops all motors so that we're not running after time.
 		robot.stop();
 	}
 }

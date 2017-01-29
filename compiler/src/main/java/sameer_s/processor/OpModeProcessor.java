@@ -4,8 +4,6 @@ import com.google.auto.service.AutoService;
 
 import org.jboss.forge.roaster.ParserException;
 import org.jboss.forge.roaster.Roaster;
-import org.jboss.forge.roaster._shade.org.eclipse.jdt.core.dom.NullLiteral;
-import org.jboss.forge.roaster.model.JavaClass;
 import org.jboss.forge.roaster.model.source.FieldSource;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 import org.jboss.forge.roaster.model.source.MethodSource;
@@ -15,9 +13,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
 import java.util.Scanner;
 import java.util.Set;
 
