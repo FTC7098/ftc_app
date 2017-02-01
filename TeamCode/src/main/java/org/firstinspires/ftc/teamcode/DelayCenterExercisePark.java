@@ -1,20 +1,17 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.media.AudioManager;
-import android.media.ToneGenerator;
-
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-
-import sameer_s.processor.OpModeMethods;
-import sameer_s.processor.OpModeStage;
-
 import static java.lang.Math.abs;
 import static sameer_s.processor.OpModeMethods.exec;
 
-@Autonomous(name = "CenterExercisePark", group = "7098")
-public class CenterExercisePark extends HybridOpMode
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
+import android.media.AudioManager;
+import android.media.ToneGenerator;
+
+import sameer_s.processor.OpModeStage;
+
+@Autonomous(name = "5s Delay", group = "7098")
+public class DelayCenterExercisePark extends HybridOpMode
 {
 	private Hardware7098Robot robot;
 
@@ -36,6 +33,9 @@ public class CenterExercisePark extends HybridOpMode
     // @formatter:off
     private OpModeStage[] program = new OpModeStage[]
     {
+        exec(() -> startTime = System.currentTimeMillis()),
+        () -> System.currentTimeMillis() - startTime >= 5000,
+
         // Drive forward to get within range of the center vortex
         // Drives forward at 30% power for 3600 encoder ticks
         exec(() -> initialEncoder = abs(robot.getEncoderValue(0))),

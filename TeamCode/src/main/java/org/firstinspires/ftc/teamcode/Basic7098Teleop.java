@@ -30,7 +30,7 @@ public class Basic7098Teleop extends OpMode
 	// Controls the speed of the robot. There are three modes: (1=100% power, .7 = 70% power, and .4=40% power)
 	private double driveSpeed = 1;
 	// Allows us to enable and disable the touch sensor that automatically loads our spring mechanism
-	private boolean usingTouch = true;
+	private boolean usingTouch = false;
 	// Allows us to use the switch as a toggle. Without this, the program would switch between using touch and not using touch many of times a second.
 	private boolean back1Pressed = false;
 
