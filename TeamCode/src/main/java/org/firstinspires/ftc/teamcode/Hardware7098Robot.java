@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.app.Activity;
+import android.hardware.SensorManager;
+
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
@@ -41,7 +44,7 @@ public class Hardware7098Robot
         csRight = map.lightSensor.get("right");
         csSide = map.lightSensor.get("beacon");
         shooterSwitch = map.touchSensor.get("shooter_switch");
-        gyro = map.gyroSensor.get("gyro");
+        //gyro = map.gyroSensor.get("gyro");
     }
 
     public void init()
