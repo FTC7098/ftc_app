@@ -32,6 +32,7 @@ public class Hardware7098Robot
     public LightSensor csLeft, csRight, csSide;
     public TouchSensor shooterSwitch;
     public GyroSensor gyro;
+    public Team7098RobotControllerActivity activity;
 
     public Hardware7098Robot(HardwareMap map)
     {
@@ -44,6 +45,7 @@ public class Hardware7098Robot
         csRight = map.lightSensor.get("right");
         csSide = map.lightSensor.get("beacon");
         shooterSwitch = map.touchSensor.get("shooter_switch");
+        activity = (Team7098RobotControllerActivity) map.appContext;
         //gyro = map.gyroSensor.get("gyro");
     }
 
@@ -159,5 +161,29 @@ public class Hardware7098Robot
         {
             this.colorSensorNum = colorSensorNum;
         }
+    }
+    private double targetHeading = -1;
+
+    public void setHeadingTarget(double relativeTarget)
+    {
+        targetHeading = simplifyAngle(getHeading() + relativeTarget);
+    }
+
+    public boolean checkHeading(double threshold)
+    {
+        return Math.abs(simplifyAngle(getHeading() - targetHeading)) < threshold;
+    }
+
+    public double getHeading()
+    {
+        return activity.getOrientation()[0];
+    }
+
+    private double simplifyAngle(double angle)
+    {
+        while(angle < -Math.PI) angle += 2 * Math.PI;
+        while(angle > Math.PI) angle -= 2 * Math.PI;
+
+        return angle;
     }
 }
