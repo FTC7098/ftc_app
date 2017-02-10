@@ -13,6 +13,7 @@ import sameer_s.processor.OpModeStage;
 import static java.lang.Math.abs;
 import static sameer_s.processor.OpModeMethods.exec;
 
+@Disabled
 @Autonomous(name = "CenterExercisePark", group = "7098")
 public class CenterExercisePark extends HybridOpMode
 {

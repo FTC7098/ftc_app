@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import sameer_s.processor.LogRobot;
 import sameer_s.processor.OpModeStage;
@@ -14,7 +15,7 @@ import static sameer_s.processor.OpModeType.AUTONOMOUS;
  * Created by ssuri on 2/3/17.
  *
  */
-
+@Disabled
 @Autonomous(name = "Internal Sensor Turn Test", group = "7098")
 public class InternalSensorTurnTestOpMode extends HybridOpMode
 {

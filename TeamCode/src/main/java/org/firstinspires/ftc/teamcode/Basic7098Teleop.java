@@ -4,8 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import sameer_s.processor.LogRobot;
-import sameer_s.processor.OpModeType;
-import sameer_s.processor.ProcessedOpMode;
 
 @TeleOp(name = "Basic7098Teleop", group = "7098")
 public class Basic7098Teleop extends OpMode
@@ -23,8 +21,8 @@ public class Basic7098Teleop extends OpMode
 	@Override
 	public void start()
 	{
-		// Sets the servos to their default position
-		robot.init();
+        // Sets the servos to their default position
+        robot.init();
 	}
 
 	// Controls the speed of the robot. There are three modes: (1=100% power, .7 = 70% power, and .4=40% power)
@@ -37,6 +35,14 @@ public class Basic7098Teleop extends OpMode
 	@Override
 	public void loop()
 	{
+        robot.csSide.enableLed(true);
+        robot.csLeft.enableLed(true);
+        robot.csRight.enableLed(true);
+
+        telemetry.addData("SIDE_COLOR", robot.csSide.getLightDetected());
+        telemetry.addData("LEFT_COLOR", robot.csLeft.getLightDetected());
+        telemetry.addData("RIGHT_COLOR", robot.csRight.getLightDetected());
+
 		// robot.drive(-driveSpeed * gamepad1.left_stick_y, -driveSpeed * gamepad1.right_stick_y);
 
 		// Scales the movement of the robot proportional to the cube of the amount the joystick is moved.
@@ -112,30 +118,30 @@ public class Basic7098Teleop extends OpMode
 		}
 		else if (gamepad2.b)
 		{
-			// Since getting the servo value initially returns NaN, we must set a value
-			// the first time we use it
-			if (Double.isNaN(robot.getServo(0)))
-			{
-				robot.setServo(0, 0.5);
-			}
-			else
-			{
-				robot.setServo(0, robot.getServo(0) - .005);
-			}
+			robot.setServo(0, robot.getServo(0) - .005);
 		}
 
 		// D-PAD horizontal pressed control the button pusher we use to activate the beacons
-		if (gamepad1.dpad_left)
+		if (gamepad2.dpad_left)
 		{
 			robot.setServo(1, 1.0f);
 		}
-		else if (gamepad1.dpad_right)
+		else if (gamepad2.dpad_right)
 		{
 			robot.setServo(1, 0.0f);
 		}
 		else
 		{
 			robot.setServo(1, 0.5f);
+		}
+
+		if (gamepad2.x)
+		{
+			robot.setServo(2, robot.getServo(2) + .005);
+		}
+		else if (gamepad2.y)
+		{
+			robot.setServo(2, robot.getServo(2) - .005);
 		}
 
 		// Driver #2 can use their D-PAD to raise and lift our forklift

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import sameer_s.processor.LogRobot;
 
 //@ProcessedOpMode(type= OpModeType.TELEOP, name="Basic7098Teleop", group="7098")
+@Disabled
 @TeleOp(name="Light", group="7098")
 public class LightSensorScanner extends OpMode
 {

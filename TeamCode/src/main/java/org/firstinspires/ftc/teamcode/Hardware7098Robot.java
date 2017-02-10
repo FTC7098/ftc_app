@@ -1,9 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.app.Activity;
-import android.hardware.SensorManager;
-
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.GyroSensor;
@@ -11,6 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -30,6 +27,7 @@ public class Hardware7098Robot
     public DcMotorController leftDrive, rightDrive, shooter, lift;
     public ServoController servo;
     public LightSensor csLeft, csRight, csSide;
+    public UltrasonicSensor ultra;
     public TouchSensor shooterSwitch;
     public GyroSensor gyro;
     public Team7098RobotControllerActivity activity;
@@ -44,6 +42,7 @@ public class Hardware7098Robot
         csLeft = map.lightSensor.get("left");
         csRight = map.lightSensor.get("right");
         csSide = map.lightSensor.get("beacon");
+        ultra = map.ultrasonicSensor.get("ultra");
         shooterSwitch = map.touchSensor.get("shooter_switch");
         activity = (Team7098RobotControllerActivity) map.appContext;
         //gyro = map.gyroSensor.get("gyro");
@@ -53,8 +52,9 @@ public class Hardware7098Robot
     {
         setServo(0, 0.8);
         setServo(1, 0.5);
+        setServo(2, 1.0);
 
-        gyro.calibrate();
+//        gyro.calibrate();
     }
 
     public int getEncoderValue(int index)
@@ -181,7 +181,7 @@ public class Hardware7098Robot
 
     private double simplifyAngle(double angle)
     {
-        while(angle < -Math.PI) angle += 2 * Math.PI;
+        while(angle <= -Math.PI) angle += 2 * Math.PI;
         while(angle > Math.PI) angle -= 2 * Math.PI;
 
         return angle;

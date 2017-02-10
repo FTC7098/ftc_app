@@ -4,12 +4,14 @@ import static java.lang.Math.abs;
 import static sameer_s.processor.OpModeMethods.exec;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 
 import sameer_s.processor.OpModeStage;
 
+@Disabled
 @Autonomous(name = "5s Delay", group = "7098")
 public class DelayCenterExercisePark extends HybridOpMode
 {
