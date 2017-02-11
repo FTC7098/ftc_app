@@ -35,13 +35,14 @@ public class Basic7098Teleop extends OpMode
 	@Override
 	public void loop()
 	{
-        robot.csSide.enableLed(true);
+        //robot.csSide.enableLed(true);
         robot.csLeft.enableLed(true);
         robot.csRight.enableLed(true);
 
         telemetry.addData("SIDE_COLOR", robot.csSide.getLightDetected());
         telemetry.addData("LEFT_COLOR", robot.csLeft.getLightDetected());
         telemetry.addData("RIGHT_COLOR", robot.csRight.getLightDetected());
+		telemetry.addData("ULTRA", robot.ultra.getUltrasonicLevel());
 
 		// robot.drive(-driveSpeed * gamepad1.left_stick_y, -driveSpeed * gamepad1.right_stick_y);
 
@@ -122,11 +123,11 @@ public class Basic7098Teleop extends OpMode
 		}
 
 		// D-PAD horizontal pressed control the button pusher we use to activate the beacons
-		if (gamepad2.dpad_left)
+		if (gamepad2.left_stick_x < .7)
 		{
 			robot.setServo(1, 1.0f);
 		}
-		else if (gamepad2.dpad_right)
+		else if (gamepad2.left_stick_x > .7)
 		{
 			robot.setServo(1, 0.0f);
 		}

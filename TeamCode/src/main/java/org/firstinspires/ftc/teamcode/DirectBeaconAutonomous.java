@@ -14,7 +14,7 @@ import android.media.ToneGenerator;
 
 import sameer_s.processor.OpModeStage;
 
-
+@Disabled
 @TeleOp(name = "Beacon Only (Blue)", group = "7098")
 public class DirectBeaconAutonomous extends HybridStateOpMode
 {

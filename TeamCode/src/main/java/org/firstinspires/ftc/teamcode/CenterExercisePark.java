@@ -13,7 +13,6 @@ import sameer_s.processor.OpModeStage;
 import static java.lang.Math.abs;
 import static sameer_s.processor.OpModeMethods.exec;
 
-@Disabled
 @Autonomous(name = "CenterExercisePark", group = "7098")
 public class CenterExercisePark extends HybridOpMode
 {
@@ -47,13 +46,13 @@ public class CenterExercisePark extends HybridOpMode
             telemetry.addData("Current Encoder", robot.getEncoderValue(0));
             telemetry.addData("Diff", abs(abs(robot.getEncoderValue(0)) - initialEncoder));
 
-            return abs(abs(robot.getEncoderValue(0)) - initialEncoder) >= 4100;
+            return abs(abs(robot.getEncoderValue(0)) - initialEncoder) >= 5200;
         },
         exec(() -> robot.drive(0)),
 
         exec(() -> initialEncoder = abs(robot.getEncoderValue(0))),
         exec(() -> robot.drive(-0.15f, -0.15f)),
-        () -> abs(abs(robot.getEncoderValue(0)) - initialEncoder) < 4100,
+        () -> abs(abs(robot.getEncoderValue(0)) - initialEncoder) < 5200,
         exec(() -> robot.drive(0)),
 
         // Runs the robot shooter until either: 1.) the touch sensor has been toggled twice
@@ -91,10 +90,10 @@ public class CenterExercisePark extends HybridOpMode
 
         // Drives the robot forward for 3500 encoder ticks, knocking off the cap ball and parking
         // the robot on the center vortex
-        exec(() -> initialEncoder = abs(robot.getEncoderValue(0))),
-        exec(() -> robot.drive(1.0f, 1.0f)),
-        () -> abs(abs(robot.getEncoderValue(0)) - initialEncoder) >= 3500,
-        exec(() -> robot.drive(0))
+//        exec(() -> initialEncoder = abs(robot.getEncoderValue(0))),
+//        exec(() -> robot.drive(1.0f, 1.0f)),
+//        () -> abs(abs(robot.getEncoderValue(0)) - initialEncoder) >= 3500,
+//        exec(() -> robot.drive(0))
     };
     // @formatter:on
 

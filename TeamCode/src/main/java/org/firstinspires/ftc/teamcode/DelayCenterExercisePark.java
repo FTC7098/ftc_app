@@ -11,8 +11,7 @@ import android.media.ToneGenerator;
 
 import sameer_s.processor.OpModeStage;
 
-@Disabled
-@Autonomous(name = "5s Delay", group = "7098")
+@Autonomous(name = "CEP (5s Delay)", group = "7098")
 public class DelayCenterExercisePark extends HybridOpMode
 {
 	private Hardware7098Robot robot;
@@ -92,10 +91,10 @@ public class DelayCenterExercisePark extends HybridOpMode
 
         // Drives the robot forward for 3500 encoder ticks, knocking off the cap ball and parking
         // the robot on the center vortex
-        exec(() -> initialEncoder = abs(robot.getEncoderValue(0))),
-        exec(() -> robot.drive(1.0f, 1.0f)),
-        () -> abs(abs(robot.getEncoderValue(0)) - initialEncoder) >= 3500,
-        exec(() -> robot.drive(0))
+//        exec(() -> initialEncoder = abs(robot.getEncoderValue(0))),
+//        exec(() -> robot.drive(1.0f, 1.0f)),
+//        () -> abs(abs(robot.getEncoderValue(0)) - initialEncoder) >= 3500,
+//        exec(() -> robot.drive(0))
     };
     // @formatter:on
 
